@@ -1,0 +1,728 @@
+                {{-- <div class="card-header">{{ __('Dashboard') }}</div> --}}
+
+                {{-- <div class="card-body">
+
+
+                    {{ __('You are logged in!') }}
+                </div> --}}
+
+
+<table>
+        <thead>
+            <tr>
+                <th  style="width: 50px;">S/N</th>
+                <th  style="width: 250px;">Title</th>
+                <th >Description</th>
+                <th  style="">Picture</th>
+                <th  style="">Price</th>
+                <th style="">Action</th>
+            </tr>
+        </thead>
+        @php
+            $sn =1;
+        @endphp
+        <tbody>
+            @foreach ($products as $product)
+            <tr>
+                <td>{{ $sn++ }}</td>
+                <td>{{ $product->title }}</td>
+                <td>{{ $product->description }}</td>
+                <td> <img src="{{ $product->picture}}" alt="" width="300px"></td>
+                <td>{{ $product->price}}</td>
+                <td>
+                    <form action="{{ route('product.delete') }}" method="post" style="display: inline-block; border:none; background: red;">
+
+                        @method('delete')
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $product->id }}">
+
+                        <input style="display: inline-block; border:none; background: red; padding:10px 22px; color:white;" type="submit" value="Delete">
+                    </form>
+                    {{-- <a href="{{ url('admin/product', $product->id) }}" style="display: inline-block;"> Edit</a> --}}
+                    <br>
+                    <button style="display: inline-block; border:none; background: rgb(0, 114, 44); padding:10px 30px; margin-top:10px;"><a style="text-decoration: none; color:white;" href="{{ url('admin/product', $product->id) }}" style="display: inline-block;"><i class="fa fa-edit"></i> Edit</a></button>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+
+
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+
+class LoginController extends Controller
+{
+    use AuthenticatesUsers;
+
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Redirect the user to the Google authentication page.
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Handle the callback from Google after authentication.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function handleGoogleCallback()
+    {
+        // Retrieve user information from Google
+        $user = Socialite::driver('google')->user();
+
+        // Extract user details
+        $googleId = $user->getId();
+        $email = $user->getEmail();
+        $name = $user->getName();
+        $avatarUrl = $user->getAvatar();
+
+        // Check if a user with the same email exists in the database
+        $existingUser = User::where('email', $email)->first();
+
+        if ($existingUser) {
+            // Log in the existing user
+            Auth::login($existingUser);
+        } else {
+            // Create a new user record and log them in
+            $newUser = new User([
+                'name' => $name,
+                'email' => $email,
+                // Add more user attributes as needed
+            ]);
+            $newUser->save();
+            Auth::login($newUser);
+        }
+
+        // Redirect the user to the desired page after authentication (e.g., home page)
+        return redirect('/home');
+    }
+}
+
+twitter
+
+bearreer:AAAAAAAAAAAAAAAAAAAAAGSCqQEAAAAAxS8GxdT3J5Y4touSVXPqVc7VRDE%3DylOtrVtEUpsLSzggHkTZOIIZJrNHePOtvXdPiemkaMxAdrIuDJ
+access token : 1557700491169202186-BQ8Gu3nyXRHdW8aai2Gid5bZYM2jvC
+secret: MCT8zsTHv8OHizNtjzp7FzteJP3pfVEiTIU0Soi7SGWop
+
+        return redirect()->route('otp.generate')->with('success', 'Registration successful. Generate OTP to continue.');
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Countdown Timer</title>
+</head>
+<body>
+    <div class="countdown-wrapper col-auto ps-md-5 py-2">
+        <div class="header-countdown row align-items-center justify-content-center gx-2">
+            <div class="ends-text col-auto">
+                <div class="d-flex align-items-center justify-content-center">
+                    <span class="svg-icon me-2"><i class="icon icon-speed-fast"></i></span>Expires in:
+                </div>
+            </div>
+            <div class="expire-countdown col-auto" data-expire="2366890">
+                <span class="days timer">
+                    <span class="digits" id="days">27</span>
+                    <span class="text">days</span>
+                </span>
+                <span class="divider">:</span>
+                <span class="hours timer">
+                    <span class="digits" id="hours">09</span>
+                    <span class="text">hours</span>
+                </span>
+                <span class="divider">:</span>
+                <span class="minutes timer">
+                    <span class="digits" id="minutes">20</span>
+                    <span class="text">mins</span>
+                </span>
+                <span class="divider">:</span>
+                <span class="seconds timer">
+                    <span class="digits" id="seconds">46</span>
+                    <span class="text">secs</span>
+                </span>
+                <span class="divider"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const countdownElement = document.querySelector(".expire-countdown");
+            const expireTime = parseInt(countdownElement.getAttribute("data-expire"), 10);
+
+            const now = new Date().getTime();
+            const timeRemaining = expireTime - now;
+
+            if (timeRemaining <= 0) {
+                // Countdown has expired, you can display a message or take some action here
+                document.getElementById("days").textContent = "0";
+                document.getElementById("hours").textContent = "00";
+                document.getElementById("minutes").textContent = "00";
+                document.getElementById("seconds").textContent = "00";
+                clearInterval(countdownInterval); // Stop the countdown
+            } else {
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById("days").textContent = days;
+                document.getElementById("hours").textContent = hours.toString().padStart(2, "0");
+                document.getElementById("minutes").textContent = minutes.toString().padStart(2, "0");
+                document.getElementById("seconds").textContent = seconds.toString().padStart(2, "0");
+            }
+        }
+
+        // Call the updateCountdown function initially to set the initial values
+        updateCountdown();
+
+        // Update the countdown every second
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
+
+
+
+ [
+            'title.required' => "Product name is required",
+            'picture.required' => "Picture url is required",
+            'price.required' => "Price is required",
+            'description.required' => "Description is required",
+            'quantity.required' => "Quantity is required",
+            'category.required' => "Cateqory is required",
+            'company.required' => "Company is required",
+            'oldprice.required' => "Oldprice is required",
+            'producttag.required' => "Product identity Number is required",
+            'fulldescription.required' => "Description is required",
+            'imagelinks.required' => "Image links is required",
+
+
+
+
+
+        ]
+
+
+<?php
+namespace App\Http\Controllers;
+
+use App\Models\Products;
+use Illuminate\Http\Request;
+
+class AdminController extends Controller
+{
+    public function show($id)
+    {
+        $products = Products::findOrFail($id);
+        return view('pages.productdetails', ['product' => $products]);
+    }
+
+    public function index(Request $request)
+    {
+        $category = $request->input('category');
+        $products = Products::when($category, function ($query) use ($category) {
+            return $query->where('category', $category);
+        })->get();
+
+        return view('admin.producttable', compact('products', 'category'));
+    }
+
+    public function create()
+    {
+        return view('admin.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'picture' => 'required|string',
+            'price' => 'required|string',
+            'description' => 'required|string',
+            'quantity' => 'required|string',
+            'category' => 'required|string',
+            'company' => 'required|string',
+            'oldprice' => 'required|string',
+            'producttag' => 'required|string',
+            // 'fulldescription' => 'required|string|min:3000',
+            'imagelinks.*' => 'required|url',
+        ],
+        [
+            'title.required' => "Product name is required",
+            'picture.required' => "Picture url is required",
+            'price.required' => "Price is required",
+            'description.required' => "Description is required",
+            'quantity.required' => "Quantity is required",
+            'category.required' => "Cateqory is required",
+            'company.required' => "Company is required",
+            'oldprice.required' => "Oldprice is required",
+            'producttag.required' => "Product identity Number is required",
+            'fulldescription.required' => "Description is required",
+            'imagelinks.required' => "Image links is required",
+
+
+
+
+
+        ]
+    );
+
+        Products::create($validatedData);
+
+        $message = 'Data saved successfully';
+        return view('admin.create')->with('success', $message);
+    }
+
+    public function edit($id)
+    {
+        $products = Products::findOrFail($id);
+        return view('admin.edit', compact('products'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'picture' => 'required|string',
+            'price' => 'required|string',
+            'description' => 'required|string',
+            'quantity' => 'required|string',
+            'category' => 'required|string',
+            'company' => 'required|string',
+            'oldprice' => 'required|string',
+            'producttag' => 'required|string',
+            // 'fulldescription' => 'required|string|min:3000',
+            'imagelinks.*' => 'required|url',
+        ]);
+
+        Products::where('id', $id)->update($validatedData);
+
+        return redirect()->route('product.index')->with('success', 'Product updated successfully');
+    }
+
+    public function delete(Request $request)
+    {
+        Products::where('id', $request->id)->delete();
+
+        // Products::findOrFail($id)->delete();
+        return redirect()->route('product.index')->with('success', 'Product deleted successfully');
+    }
+}
+
+<?php
+
+use App\Http\Controllers\AuthOtpController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
+
+
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\TwitterController;
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Auth::routes();
+// Route::get('/generate-otp', [Controller::class, 'generateOtp']);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [PageController::class, 'index'])->name('home.page');
+// Route::get('/index', [PageController::class, 'index']);
+
+
+// Route::group(['middleware' => ['auth', 'admin']], function () {
+// Admin dashboard route
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+// Admin product routes
+Route::post('/admin/products/post', [AdminController::class, 'post'])->name('product.post');
+Route::get('/admin/add/product', [AdminController::class, 'create']);
+Route::get('/admin/products', [AdminController::class, 'index']);
+Route::get('/product/{id}', [AdminController::class, 'show'])->name('product.show');
+
+
+Route::get('/admin/product/{id}', [AdminController::class, 'edit']);
+Route::put('/admin/products/post/update', [AdminController::class, 'update'])->name('product.update');
+Route::delete('/admin/products/delete', [AdminController::class, 'delete'])->name('product.delete');
+
+
+// // Route::get('/products/{id}', [AdminController::class, 'show'])->name('product.show');
+// Route::get('/product/{id}', [AdminController::class, 'show'])->name('product.show');
+
+// Route::get('/admin/products', [AdminController::class, 'index'])->name('product.index');
+// Route::get('/admin/products/create', [AdminController::class, 'create'])->name('product.create');
+// Route::post('/admin/products', [AdminController::class, 'store'])->name('product.store');
+// // Route::get('/admin/products/edit{id}', [AdminController::class, 'edit'])->name('product.edit');
+// Route::get('/admin/product/{id}',[AdminController::class, 'edit'])->name('product.edit');
+
+// Route::put('/admin/products/update', [AdminController::class, 'update'])->name('product.update');
+// Route::delete('/admin/products/', [AdminController::class, 'delete'])->name('product.delete');
+
+// Admin user routes
+Route::get('/admin/users', [UserController::class, 'index']);
+Route::get('/admin/user/{id}', [UserController::class, 'edits']);
+Route::put('/admin/user/post/update', [UserController::class, 'updates'])->name('users.update');
+Route::delete('/admin/user/delete', [UserController::class, 'delete'])->name('user.delete');
+// });
+
+// User dashboard route
+Route::GET('/user', [HomeController::class, 'index']);
+Route::GET('/user/{id}', [HomeController::class, 'edit']);
+Route::PUT('/user/post/update', [HomeController::class, 'update'])->name('use.updates');
+
+
+
+// Cart routes
+Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])
+    ->middleware('auth')
+    ->name('cart.add');
+
+// Route for viewing the cart
+Route::get('/cart/view', [CartController::class, 'index'])
+    ->middleware('auth')
+    ->name('cart.view');
+
+// Route for removing an item from the cart
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])
+    ->middleware('auth')
+    ->name('cart.remove');
+
+
+
+
+
+
+Route::prefix('google')->name('google.')->group(function () {
+    Route::get('login', [GoogleController::class, 'redirectToGoogle'])->name('login');
+    Route::any('callback', [GoogleController::class, 'handleGoogleCallback'])->name('callback');
+});
+
+Route::get('auth/twitter', 'TwitterController@redirectToTwitter');
+Route::get('auth/twitter/callback', 'TwitterController@handleTwitterCallback');
+
+Route::get('auth/twitter', [TwitterController::class, 'redirectToTwitter']);
+Route::get('auth/twitter/callback', [TwitterController::class, 'handleTwitterCallback']);
+
+
+// google linking
+Route::controller(AuthOtpController::class)->group(function () {
+    Route::get('/otp/login', 'login')->name('otp.login');
+    Route::post('/otp/generate', 'generate')->name('otp.generate');
+    Route::get('/otp/verification/{user_id}', 'verification')->name('otp.verification');
+    Route::post('/otp/login', 'loginWithOtp')->name('otp.getlogin');
+});
+
+
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/products/{id}/add-related', [ProductController::class, 'addRelatedProducts'])->name('products.addRelated');
+
+
+
+ <a href="{{ route('cart.view') }}">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    @php
+                                        $cartCount = count(session('cart', []));
+                                    @endphp
+                                    @if($cartCount > 0)
+                                        <span class="position-absolute top-70 start-150 translate-middle badge rounded-pill" style="background: #fab528; font-size: 10px;">
+                                            {{ $cartCount }}
+                                            <span class="visually-hidden">unread messages</span>
+                                        </span>
+                                    @endif
+                                </a>
+
+
+
+
+
+
+
+ <div id="app">
+
+
+        <nav class="navbar upper navbar-expand-lg"
+            style="height:42px; background-color: #f7f7f7; border-bottom:1px solid rgba(0, 0, 0, 0.404); ">
+            <div class="container-fluid">
+
+                <span class="navbar-toggler" type="span" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </span>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" style="font-size: 13px" aria-current="page" href="#">About US
+                                |</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="font-size: 13px" href="#">Wishlist |</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="font-size: 13px" href="#">Order Tracking |</a>
+                        </li>
+                    </ul>
+                    <span class="navbar-text " style="">
+                        <div class="d-flex me-5">
+                            <div>
+                                <img src="https://farmart.botble.com/vendor/core/core/base/images/flags/vn.svg"
+                                    width="20px" alt="">
+                                <span style="font-size: 13px">Tiếng Việt |</span>
+                            </div>
+                            <div class="ms-2">
+                                <img src="https://farmart.botble.com/vendor/core/core/base/images/flags/sa.svg"
+                                    width="20px" alt="">
+                                <span style="font-size: 13px">Arabic |</span>
+                            </div>
+
+
+                            <div class="dropdown ms-2">
+                                <span class="dropbtn">USD <i class="fa-solid fa-caret-down"></i> </span><span
+                                    class="ms-2">|</span>
+                                <div class="dropdown-content">
+                                    <a href="#">EUR</a>
+                                    <a href="#">VND</a>
+
+                                </div>
+                            </div>
+                            <span class="ms-3" style="display: flex">
+
+                                <!-- Authentication Links -->
+                                @guest
+                                    @if (Route::has('login'))
+                                        <a class="nav-link ms-2" style="font-size: 13px"
+                                            href="{{ route('login') }}">{{ __('Login  |') }}</a>
+                                    @endif
+
+                                    @if (Route::has('register'))
+                                        <a class="nav-link ms-2" style="font-size: 13px"
+                                            href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    @endif
+                                @else
+                                    <li class="nav-item dropdown">
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
+                                            role="span" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" v-pre>
+                                            Hi {{ Auth::user()->name }}
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault();
+                                                             document.getElementById('logout-form').submit();">
+                                                {{ __('Logout') }}
+                                            </a>
+
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
+                                                @csrf
+                                            </form>
+                                        </div>
+                                    </li>
+                                @endguest
+
+                            </span>
+                        </div>
+
+
+
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-expand-lg navbar-light "
+            style="background: white; border-bottom:1px solid rgb(179, 178, 178)">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url('/') }}">
+
+                    <h3 class=""> BESTERIO</h3><span class=""
+                        style="font-size: 20px; color:#ffc107;">GROCERY .</span>
+                </a>
+                <span class="border-0" type="span" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler fas fa-bars text-white border-0"></span>
+                </span>
+                <div class="collaps navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav m-auto d-flex justify-content-center">
+                        <form class="d-flex">
+                            <input class="form-contro inptuBox" size="80" type="search" placeholder="Search"
+                                aria-label="Search">
+                            <button
+                                style="border-bottom-right-radius: 7px; border-top-right-radius: 7px; border:none; width:50px;"
+                                class="" type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </ul>
+                    <span class="navbar-text">
+
+
+
+                        <div class="d-flex fav ">
+
+                            <div>
+                                <h5>8 800 332 65-66</h5>
+                                <span>support 24/7</span>
+                            </div>
+
+                            <div class="ms-3">
+                                <i class="fa-solid fa-repeat">
+                                    <span
+                                        class="position-absolute top-30 start-150 translate-middle badge rounded-pill "
+                                        style="background: #fab528; font-size:10px;">
+                                        0
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <i class="fa-regular fa-heart">
+                                    <span id="cart-badge"
+                                        class="position-absolute top-30 start-150 translate-middle badge rounded-pill "
+                                        style="background: #fab528; font-size:10px;">
+                                        0
+                                        <span class="visually-hidden">unread messages</span>
+                                    </span>
+                                </i>
+                                <a href="{{ route('cart.view') }}">
+                                    <i class="fa-solid fa-cart-shopping">
+                                        @php
+                                            $cartCount = count(session('cart', []));
+                                        @endphp
+                                        @if ($cartCount > 0)
+                                            <span
+                                                class="position-absolute top-30 start-150 translate-middle badge rounded-pill "
+                                                style="background: #fab528; font-size:10px;">
+                                                {{ $cartCount }}
+                                                <span class="visually-hidden">unread messages</span>
+                                            </span>
+                                            {{-- <span class="badge"></span> --}}
+                                        @endif
+                                        <span
+                                            class="position-absolute top-30 start-150 translate-middle badge rounded-pill "
+                                            style="background: #fab528; font-size:10px;">
+                                            {{ $cartCount }}
+                                        </span>
+
+                                    </i>
+                                </a>
+                            </div>
+
+                            <div>
+                                <div class="ms-4">
+                                    <span class="">
+                                        Your Cart
+                                        <p> $0.00</p>
+                                    </span>
+                                </div>
+                            </div>
+
+
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-expand-lg navbar-light " style="background: white">
+            <div class="container-fluid">
+                <div
+                    style="padding: 13px; width:210px; border-radius:7px; background:#fab528; text-transform: uppercase; font-weight:bold;">
+                    <i class="fa-solid fa-bars"></i> Shop by Category
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto ms-5 mb-2 mb-lg-0 dey">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#"><i
+                                    class="fa-solid fa-tag"></i>Special Price</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Pages <i class="fa-solid fa-angle-down"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Shop <i class="fa-solid fa-angle-down"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Stores </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">FAQS <i class="fa-solid fa-angle-down"></i></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact <i class="fa-solid fa-angle-down"></i></a>
+                        </li>
+                    </ul>
+                    <span class="navbar-text" style="font-weight: bold">
+                        <i class="fa fa-repeat"></i> Recently viewed
+                    </span>
+                </div>
+            </div>
+        </nav>
+
+
+
+
+
+
+        <main class="py-2">
+            @yield('content')
+        </main>
+    </div>
