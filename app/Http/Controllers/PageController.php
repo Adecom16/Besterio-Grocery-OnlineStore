@@ -20,8 +20,14 @@ class PageController extends Controller
 public function index()
 {
     $products = Products::all(); // Retrieve all products from the database
-    // return view('pages.home', ['products' => $products]);
     return view('pages.home', compact('products'));
+}
+
+public function about(){
+    return view('pages.about');
+}
+public function terms(){
+    return view('pages.terms');
 }
 
 }

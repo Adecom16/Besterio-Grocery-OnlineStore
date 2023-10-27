@@ -37,7 +37,9 @@ Auth::routes(['verify'=> true]);
 
 Route::middleware(['verified'])->get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [PageController::class, 'index'])->name('home.page');
-// Route::get('/index', [PageController::class, 'index']);
+Route::get('/about', [PageController::class, 'About']);
+Route::get('/terms-of-use', [PageController::class, 'Terms']);
+
 
 
 // Route::group(['middleware' => ['auth', 'admin']], function () {

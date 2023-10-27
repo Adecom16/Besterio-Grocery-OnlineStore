@@ -27,7 +27,7 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    {{-- <link media="all" type=text/css rel="stylesheet" href="https://farmart.botble.com/themes/farmart/css/style.css?v=1.17.0"> --}}
+
 
     @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -208,11 +208,25 @@
                   <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#"><i class="fa-solid fa-tag"></i>Special Price</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Pages <i class="fa-solid fa-angle-down"></i></a>
+                  <li class="nav-item dd">
+                    <a class="nav-link" href="#">Pages <i class="fa-solid fa-angle-down"></i>
+                        <ul class="submenu" style="">
+                            <li><a href="{{ url('/about') }}"> About us </a></li>
+                            <li><a href="{{ url('/terms-of-use') }}"> Terms Of Use </a></li>
+                            <li><a href="https://farmart.botble.com/terms-conditions"> Terms &amp; Conditions </a></li>
+                            <li><a href="https://farmart.botble.com/refund-policy"> Refund Policy </a></li>
+                            <li><a href="https://farmart.botble.com/coming-soon"> Coming soon </a></li>
+                        </ul>
+                    </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Shop <i class="fa-solid fa-angle-down"></i></a>
+                  <li class="nav-item dd">
+                    <a class="nav-link" href="#">Shop <i class="fa-solid fa-angle-down"></i>
+                        <ul class="submenu2" style="">
+                            <li><a href="https://farmart.botble.com/products"> All products </a></li>
+                            <li><a href="https://farmart.botble.com/product-categories/potatoes"> Products Of Category </a></li>
+                            <li><a href="https://farmart.botble.com/products/beat-headphone"> Product Single </a></li>
+                        </ul>
+                    </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">Stores </a>
